@@ -47,7 +47,7 @@ def init(key, path):
 		config[key] = {'path': path, 'packages': {}}
 		write(config)
 	else:
-		print('path does not exit:', path)
+		print('path does not exist:', path)
 
 
 def deinit(key):
@@ -112,6 +112,14 @@ def install(dst, src):
 	src_full = os.path.abspath(src)
 	dst_full = os.path.abspath(os.path.join(config[scope]['path'], name))
 
+	if not os.path.exists(src_full):
+		print(src_full, 'does not exist')
+		return
+
+	if not os.path.exists(dst_full):
+		print(dst_full, 'does not exist')
+		return
+
 	print('src', src_full)
 	print('dst', dst_full)
 
@@ -126,7 +134,7 @@ def add(key, path):
 	target_full = os.path.abspath(os.path.join(config[key]['path'], path))
 
 	if not os.path.exists(target_full):
-		print(target_full, 'does not exit')
+		print(target_full, 'does not exist')
 		return
 
 	if not os.path.islink(target_full):
@@ -134,6 +142,10 @@ def add(key, path):
 		return
 
 	src = os.path.realpath(target_full)
+	if not os.path.exists(src):
+		print(src, 'does not exist')
+		return
+
 	name = os.path.basename(target_full)
 	config[key]['packages'][name] = src
 
