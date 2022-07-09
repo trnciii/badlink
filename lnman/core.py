@@ -61,7 +61,7 @@ def list_packages():
 
 	li = sum([
 		[(scope, dic['path'])]
-		+ [('{}.{}'.format(scope, name), path) for name, path in dic['packages'].items()]
+		+ [('{}/{}'.format(scope, name), path) for name, path in dic['packages'].items()]
 		for scope, dic in config.items()
 	], [])
 
@@ -85,8 +85,8 @@ def ls_pretty(key):
 
 def show(key):
 	config = load()
-	if '.' in key:
-		scope, name = key.split('.')
+	if '/' in key:
+		scope, name = key.split('/')
 		return '\n'.join([
 			'scope: {}'.format(scope),
 			'name:  {}'.format(name),
@@ -103,8 +103,8 @@ def show(key):
 
 def install(dst, src):
 
-	if '.' in dst:
-		scope, name = dst.split('.')
+	if '/' in dst:
+		scope, name = dst.split('/')
 	else:
 		scope, name = dst, os.path.basename(src)
 
@@ -129,9 +129,10 @@ def install(dst, src):
 	write(config)
 
 
-def add(key, path):
+def add(key):
 	config = load()
-	target_full = os.path.abspath(os.path.join(config[key]['path'], path))
+	scope, path = key.split('/')
+	target_full = os.path.abspath(os.path.join(config[scope]['path'], path))
 
 	if not os.path.exists(target_full):
 		print(target_full, 'does not exist')
@@ -147,7 +148,7 @@ def add(key, path):
 		return
 
 	name = os.path.basename(target_full)
-	config[key]['packages'][name] = src
+	config[scope]['packages'][name] = src
 
 	print('src', src)
 	print('dst', target_full)
@@ -156,7 +157,7 @@ def add(key, path):
 
 
 def remove(key):
-	scope, alias = key.split('.')
+	scope, alias = key.split('/')
 
 	config = load()
 	os.remove(os.path.join(config[scope]['path'], alias))
