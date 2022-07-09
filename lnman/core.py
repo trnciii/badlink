@@ -116,8 +116,8 @@ def install(dst, src):
 		print(src_full, 'does not exist')
 		return
 
-	if not os.path.exists(dst_full):
-		print(dst_full, 'does not exist')
+	if os.path.exists(dst_full):
+		print(dst_full, 'already exists')
 		return
 
 	print('src', src_full)
