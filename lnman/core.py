@@ -7,13 +7,16 @@ path_config = path_lib+"/config.json"
 
 def load():
 	config = json.load(open(path_config, 'r'))
+
+	valid, _ = version.validate(config)
+	if not valid:
+		ms = 'config version does not agree. try "lnman upgrade_config"'
+		print(helper.term_color(ms, 'red'))
+
 	return config
 
 def write(config):
-	if not version.valid(config):
-		print('config version does\'nt agree. try "lnman upgrade_config"')
-
-	string = json.dumps(config, indent=2)
+	string = json.dumps(config, indent=2, sort_keys=True)
 	open(path_config, "w").write(string)
 	print('saved config')
 
