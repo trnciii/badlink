@@ -80,7 +80,7 @@ def lsdir(key):
 
 
 def ls_pretty(key):
-	return '  '.join([helper.term_cyan(i) if d else i for i, d in lsdir(key)])
+	return '  '.join([helper.term_color(i, 'cyan') if d else i for i, d in lsdir(key)])
 
 
 def show(key):
