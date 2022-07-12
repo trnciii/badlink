@@ -1,5 +1,5 @@
 import os, json
-from . import helper
+from . import helper, version
 
 path_lib = os.path.dirname(os.path.abspath(__file__))
 path_config = path_lib+"/config.json"
@@ -10,8 +10,12 @@ def load():
 	return config
 
 def write(config):
+	if not version.valid(config):
+		print('config version does\'nt agree. try "lnman upgrade_config"')
+
 	string = json.dumps(config, indent=2)
 	open(path_config, "w").write(string)
+	print('saved config')
 
 
 def cat():

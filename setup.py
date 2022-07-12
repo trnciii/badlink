@@ -1,8 +1,9 @@
 from setuptools import setup, find_packages
+from lnman.version import version_string
 
 setup(
 	name='lnman',
-	version='1.0.2',
+	version=version_string,
 	url='https://github.com/trnciii/lnman',
 	license='MIT',
 	packages=find_packages(),

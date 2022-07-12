@@ -1,5 +1,5 @@
 import sys
-from . import core
+from . import core, version
 
 
 def main():
@@ -19,7 +19,10 @@ def main():
 
 		'install': core.install,
 		'add': core.add,
-		'remove': core.remove
+		'remove': core.remove,
+
+		'version': version.version,
+		'upgrade_config': version.upgrade_config
 	}
 
 
