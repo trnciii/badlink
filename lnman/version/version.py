@@ -16,7 +16,8 @@ def to_string(numbers):
 def default_config():
 	return {
 		'header': {'version': version_string},
-		'sites': {}
+		'sites': [],
+		'packages': []
 	}
 
 def validate(config):
