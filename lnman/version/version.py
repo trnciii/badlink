@@ -13,6 +13,12 @@ def to_numbers(string):
 def to_string(numbers):
 	return '.'.join(numbers)
 
+def default_config():
+	return {
+		'header': {'version': version_string},
+		'sites': {}
+	}
+
 def validate(config):
 	if 'header' not in config.keys():
 		return False, 'noheader'

@@ -47,11 +47,11 @@ def init(key, path):
 	if os.path.exists(path_config):
 		config = load()
 	else:
-		config = {}
+		config = version.default_config()
 
 	path = os.path.abspath(path)
 	if os.path.exists(path):
-		config[key] = {'path': path, 'packages': {}}
+		config['sites'][key] = {'path': path, 'packages': {}}
 		write(config)
 	else:
 		print('path does not exist:', path)
@@ -59,17 +59,17 @@ def init(key, path):
 
 def deinit(key):
 	config = load()
-	del config[key]
+	del config['sites'][key]
 	write(config)
 
 
 def list_packages():
-	config = load()
+	sites = load()['sites']
 
 	li = sum([
 		[(scope, dic['path'])]
 		+ [('{}/{}'.format(scope, name), path) for name, path in dic['packages'].items()]
-		for scope, dic in config.items()
+		for scope, dic in sites.items()
 	], [])
 
 	w = max([len(name) for name, _ in li])
@@ -81,9 +81,9 @@ def lsdir(key):
 	'''
 	returns a list of tuples of each content in the "key" directory and if it is managed
 	'''
-	path, packages = load()[key].values()
-	keys = packages.keys()
-	return [(i, (i in keys)) for i in os.listdir(path)]
+	site = load()['sites'][key]
+	keys = site['packages'].keys()
+	return [(i, (i in keys)) for i in os.listdir(site['path'])]
 
 
 def ls_pretty(key):
@@ -91,19 +91,19 @@ def ls_pretty(key):
 
 
 def show(key):
-	config = load()
-	if '/' in key:
-		scope, name = key.split('/')
+	sites = load()['sites']
+	if '/' in key: # package
+		site, name = key.split('/')
 		return '\n'.join([
-			'scope: {}'.format(scope),
-			'name:  {}'.format(name),
-			'path:  {}'.format(config[scope]['packages'][name])
+			'site: {}'.format(site),
+			'name: {}'.format(name),
+			'path: {}'.format(sites[site]['packages'][name])
 		])
-	else:
-		packages = config[key]['packages'].keys()
+	else: # site
+		packages = sites[key]['packages'].keys()
 		return '\n'.join([
 			'name:     {}'.format(key),
-			'path:     {}'.format(config[key]['path']),
+			'path:     {}'.format(sites[key]['path']),
 			'packages: [ {} ]'.format(', '.join(packages))
 		])
 
@@ -111,13 +111,15 @@ def show(key):
 def install(dst, src):
 
 	if '/' in dst:
-		scope, name = dst.split('/')
+		sitename, linkname = dst.split('/')
 	else:
-		scope, name = dst, os.path.basename(src)
+		sitename, linkname = dst, os.path.basename(src)
 
 	config = load()
+	site = config['sites'][sitename]
+
 	src_full = os.path.abspath(src)
-	dst_full = os.path.abspath(os.path.join(config[scope]['path'], name))
+	dst_full = os.path.abspath(os.path.join(site['path'], linkname))
 
 	if not os.path.exists(src_full):
 		print(src_full, 'does not exist')
@@ -132,14 +134,16 @@ def install(dst, src):
 
 	os.symlink(src_full, dst_full)
 
-	config[scope]['packages'][name] = src_full
+	site['packages'][linkname] = src_full
+
+	config['sites'][sitename] = site
 	write(config)
 
 
 def add(key):
 	config = load()
-	scope, path = key.split('/')
-	target_full = os.path.abspath(os.path.join(config[scope]['path'], path))
+	site, path = key.split('/')
+	target_full = os.path.abspath(os.path.join(config['sites'][site]['path'], path))
 
 	if not os.path.exists(target_full):
 		print(target_full, 'does not exist')
@@ -155,7 +159,7 @@ def add(key):
 		return
 
 	name = os.path.basename(target_full)
-	config[scope]['packages'][name] = src
+	config['sites'][site]['packages'][name] = src
 
 	print('src', src)
 	print('dst', target_full)
@@ -164,10 +168,10 @@ def add(key):
 
 
 def remove(key):
-	scope, alias = key.split('/')
+	site, alias = key.split('/')
 
 	config = load()
-	os.remove(os.path.join(config[scope]['path'], alias))
+	os.remove(os.path.join(config['sites'][site]['path'], alias))
 
-	del config[scope]['packages'][alias]
+	del config['sites'][site]['packages'][alias]
 	write(config)
