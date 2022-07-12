@@ -140,7 +140,17 @@ def install(dst, src):
 	write(config)
 
 
-def add(key):
+def remove(key):
+	site, alias = key.split('/')
+
+	config = load()
+	os.remove(os.path.join(config['sites'][site]['path'], alias))
+
+	del config['sites'][site]['packages'][alias]
+	write(config)
+
+
+def register(key):
 	config = load()
 	site, path = key.split('/')
 	target_full = os.path.abspath(os.path.join(config['sites'][site]['path'], path))
@@ -167,11 +177,10 @@ def add(key):
 	write(config)
 
 
-def remove(key):
+def unregister(key):
 	site, alias = key.split('/')
 
 	config = load()
-	os.remove(os.path.join(config['sites'][site]['path'], alias))
-
 	del config['sites'][site]['packages'][alias]
+
 	write(config)

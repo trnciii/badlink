@@ -18,8 +18,9 @@ def main():
 		'lsdir': core.ls_pretty,
 
 		'install': core.install,
-		'add': core.add,
 		'remove': core.remove,
+		'register': core.register,
+		'unregister': core.unregister,
 
 		'version': version.version,
 		'upgrade_config': version.upgrade_config
