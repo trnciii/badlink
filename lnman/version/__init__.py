@@ -1,7 +1,7 @@
 from .version import (
 	version,
-	to_number,
+	to_numbers,
 	to_string,
-	valid,
+	validate,
 	upgrade_config
 )

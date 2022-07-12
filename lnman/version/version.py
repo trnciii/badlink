@@ -2,29 +2,44 @@ from .. import core, helper
 import json
 
 
-version_string = '1.0.2'
+version_string = '1.0.3'
 
 def version():
 	return '{} ({})'.format(core.path_lib, version_string)
 
-def to_number(string):
-	return [int(s) for s in string.split('.')]
+def to_numbers(string):
+	return tuple([int(s) for s in string.split('.')])
 
 def to_string(numbers):
 	return '.'.join(numbers)
 
-def valid(config):
-	return ('version' in config.keys()) and (config['version'] == version_string)
+def validate(config):
+	if 'header' not in config.keys():
+		return False, 'noheader'
+
+	v_config = to_numbers(config['header']['version'])
+	v_current = to_numbers(version_string)
+
+	if v_config < v_current:
+		print('config version ({}) is behind app version ({})'.format(v_config, v_current))
+		return False, config['header']['version']
+
+	if v_config > v_current:
+		print('config version ({}) is ahead app version ({}). upgrade app.'.format(v_config, v_current))
+		return False, None
+
+	return True, None
 
 
 def upgrade_config():
 	config = core.load()
-	if valid(config):
+	valid, how = validate(config)
+	if valid:
 		print('up to date')
 		return
 
 	old_text = json.dumps(config, indent=2).splitlines(keepends=True)
-	upgrade_config_core(config)
+	config = upgrade_config_core(config, how)
 	new_text = json.dumps(config, indent=2).splitlines(keepends=True)
 	helper.prettydiff(old_text, new_text)
 
@@ -32,20 +47,15 @@ def upgrade_config():
 		core.write(config)
 
 
-def upgrade_config_core(config):
+def upgrade_config_core(config, key):
+	from . import upgrader
+
+	if key == None:
+		return config
+
 	upgrade_from = {
-		'1.0.2': ug_1_0_2,
+		'noheader': upgrader.ug_noheader
 	}
 
-	if 'version' not in config.keys():
-		if 'n' != input('version is missing. set {}? (Y/n)'.format(version_string)).lower():
-			config['version'] = version_string
-
-	elif config['version'] < version_string:
-		if 'n' != input('''
-			upgrade {} -> {}?. No data will change. (Y/n)
-			'''.format(config['version'], version_string)).lower():
-
-			config['version'] = version_string
-
-	return config
+	ug = upgrade_from[key] if key in upgrade_from.keys() else upgrader.ug_numbers
+	return ug(config)
