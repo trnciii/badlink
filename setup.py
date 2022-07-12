@@ -1,5 +1,5 @@
 from setuptools import setup, find_packages
-from lnman.version import version_string
+from lnman.version.version import version_string
 
 setup(
 	name='lnman',

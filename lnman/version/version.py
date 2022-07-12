@@ -1,4 +1,4 @@
-from . import core, helper
+from .. import core, helper
 import json
 
 
@@ -33,6 +33,10 @@ def upgrade_config():
 
 
 def upgrade_config_core(config):
+	upgrade_from = {
+		'1.0.2': ug_1_0_2,
+	}
+
 	if 'version' not in config.keys():
 		if 'n' != input('version is missing. set {}? (Y/n)'.format(version_string)).lower():
 			config['version'] = version_string
@@ -41,6 +45,7 @@ def upgrade_config_core(config):
 		if 'n' != input('''
 			upgrade {} -> {}?. No data will change. (Y/n)
 			'''.format(config['version'], version_string)).lower():
+
 			config['version'] = version_string
 
 	return config
