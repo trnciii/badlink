@@ -14,6 +14,7 @@ def main():
 		'deinit': core.deinit,
 
 		'list': core.list_packages,
+		'sites': core.list_sites,
 		'show': core.show,
 		'lsdir': core.ls_pretty,
 

@@ -77,6 +77,14 @@ def list_packages():
 	return text
 
 
+def list_sites():
+	sites = load()['sites']
+	li = [(k, v['path']) for k, v in sites.items()]
+	w = max(len(k) for k, _ in li)
+	return '\n'.join(f'{k.ljust(w)} {v}' for k, v in li)
+
+
+
 def lsdir(key):
 	'''
 	returns a list of tuples of each content in the "key" directory and if it is managed
