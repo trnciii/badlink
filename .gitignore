@@ -1,2 +1,4 @@
 *__pycache__/
 lnman/config.json
+*.egg-info
+build
