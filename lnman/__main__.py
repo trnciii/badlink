@@ -24,7 +24,8 @@ def main():
 		'unregister': core.unregister,
 
 		'version': version.version,
-		'upgrade_config': version.upgrade_config
+		'upgrade_config': version.upgrade_config,
+		'url': version.url
 	}
 
 

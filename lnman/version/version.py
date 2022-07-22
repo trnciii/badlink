@@ -4,6 +4,9 @@ import json
 
 version_string = '1.0.3'
 
+def url():
+	return 'https://github.com/trnciii/lnman'
+
 def version():
 	return '{} ({})'.format(core.path_lib, version_string)
 
