@@ -1,52 +1,25 @@
 import os, json
-from . import helper, version
+from . import helper
 
 path_config = os.path.join(os.path.expanduser('~'), 'lnman.json')
-
+version_string = '1.0.3'
 
 def load():
-	config = json.load(open(path_config, 'r'))
-
-	valid, _ = version.validate(config)
-	if not valid:
-		ms = 'config version does not agree. try "lnman upgrade_config"'
-		print(helper.term_color(ms, 'red'))
-
-	return config
+	return json.load(open(path_config, 'r'))
 
 def write(config):
-	string = json.dumps(config, indent=2, sort_keys=True)
-	open(path_config, "w").write(string)
+	with open(path_config, "w") as f:
+		f.write(json.dumps(config, indent=2, sort_keys=True))
 	print('saved config')
 
-
-def cat():
-	return json.dumps(load(), indent=2)
-
-def file():
-	return path_config
-
-def set(*args):
-	keys = args[0].split('.')
-	value = args[1]
-	config = load()
-
-	exec('{} = value'.format(helper.ref_keys(keys)))
-
-	write(config)
-
-
-def get(*args):
-	keys = args[0].split('.')
-	config = load()
-	return eval('str({})'.format(helper.ref_keys(keys)))
-
+def default_config():
+	return {'sites': {}}
 
 def init(key, path):
 	if os.path.exists(path_config):
 		config = load()
 	else:
-		config = version.default_config()
+		config = default_config()
 
 	path = os.path.abspath(path)
 	if os.path.exists(path):

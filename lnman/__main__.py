@@ -1,14 +1,10 @@
 import sys
-from . import core, version
+from . import core
 
 
 def main():
 	ftable = {
-		'get': core.get,
-		'set': core.set,
-
-		'cat': core.cat,
-		'file': core.file,
+		'file': lambda:print(core.path_config),
 
 		'init': core.init,
 		'deinit': core.deinit,
@@ -23,9 +19,8 @@ def main():
 		'register': core.register,
 		'unregister': core.unregister,
 
-		'version': version.version,
-		'upgrade_config': version.upgrade_config,
-		'url': version.url
+		'--version': lambda:print(core.version_string),
+		'url': lambda:print('https://github.com/trnciii/lnman')
 	}
 
 
