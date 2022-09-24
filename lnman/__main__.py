@@ -12,7 +12,7 @@ def main():
 		'list': core.list_packages,
 		'sites': core.list_sites,
 		'show': core.show,
-		'lsdir': core.ls_pretty,
+		'lsdir': core.list_directory,
 
 		'install': core.install,
 		'remove': core.remove,
@@ -28,8 +28,7 @@ def main():
 
 	if len(argv)>1 and argv[1] in ftable.keys():
 		f, *args = argv[1:]
-		ret = ftable[f](*args)
-		if ret: print(ret)
+		ftable[f](*args)
 	else:
 		print('nothing to do')
 

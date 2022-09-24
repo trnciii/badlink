@@ -12,14 +12,12 @@ def write(config):
 		f.write(json.dumps(config, indent=2, sort_keys=True))
 	print('saved config')
 
-def default_config():
-	return {'sites': {}}
 
 def init(key, path):
 	if os.path.exists(path_config):
 		config = load()
 	else:
-		config = default_config()
+		config = {'sites': {}}
 
 	path = os.path.abspath(path)
 	if os.path.exists(path):
@@ -45,47 +43,42 @@ def list_packages():
 	], [])
 
 	w = max([len(name) for name, _ in li])
-	text = '\n'.join(['{}  {}'.format(name.ljust(w), path) for (name, path) in li])
-	return text
+	print('\n'.join(['{}  {}'.format(name.ljust(w), path) for (name, path) in li]))
 
 
 def list_sites():
 	sites = load()['sites']
 	li = [(k, v['path']) for k, v in sites.items()]
 	w = max(len(k) for k, _ in li)
-	return '\n'.join(f'{k.ljust(w)} {v}' for k, v in li)
+	print('\n'.join(f'{k.ljust(w)} {v}' for k, v in li))
 
 
-
-def lsdir(key):
+def list_directory(key):
 	'''
-	returns a list of tuples of each content in the "key" directory and if it is managed
+	print in cyan if the item is managed
 	'''
 	site = load()['sites'][key]
 	keys = site['packages'].keys()
-	return [(i, (i in keys)) for i in os.listdir(site['path'])]
-
-
-def ls_pretty(key):
-	return '  '.join([helper.term_color(i, 'cyan') if d else i for i, d in lsdir(key)])
+	items = [(i, (i in keys)) for i in os.listdir(site['path'])]
+	print('\n'.join([helper.term_color(i, 'cyan') if d else i for i, d in items]))
 
 
 def show(key):
 	sites = load()['sites']
 	if '/' in key: # package
 		site, name = key.split('/')
-		return '\n'.join([
+		print('\n'.join([
 			'site: {}'.format(site),
 			'name: {}'.format(name),
 			'path: {}'.format(sites[site]['packages'][name])
-		])
+		]))
 	else: # site
 		packages = sites[key]['packages'].keys()
-		return '\n'.join([
+		print('\n'.join([
 			'name:     {}'.format(key),
 			'path:     {}'.format(sites[key]['path']),
 			'packages: [ {} ]'.format(', '.join(packages))
-		])
+		]))
 
 
 def install(dst, src):
