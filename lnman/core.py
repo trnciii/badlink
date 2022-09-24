@@ -1,8 +1,7 @@
 import os, json
 from . import helper, version
 
-path_lib = os.path.dirname(os.path.abspath(__file__))
-path_config = path_lib+"/config.json"
+path_config = os.path.join(os.path.expanduser('~'), 'lnman.json')
 
 
 def load():
