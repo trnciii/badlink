@@ -2,7 +2,7 @@ import os, json
 from . import helper
 
 path_config = os.path.join(os.path.expanduser('~'), 'lnman.json')
-version_string = '1.0.3'
+version_string = '1.0.4'
 
 def load():
 	return json.load(open(path_config, 'r'))
