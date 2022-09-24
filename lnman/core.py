@@ -36,14 +36,14 @@ def deinit(key):
 def list_packages():
 	sites = load()['sites']
 
-	li = sum([
-		[(scope, dic['path'])]
-		+ [('{}/{}'.format(scope, name), path) for name, path in dic['packages'].items()]
-		for scope, dic in sites.items()
-	], [])
+	li = sum((
+		[(f'+ {site}', v['path'])]
+		+ [(f'  - {pk}', path) for pk, path in v['packages'].items()]
+		for site, v in sites.items()
+	), [])
 
 	w = max([len(name) for name, _ in li])
-	print('\n'.join(['{}  {}'.format(name.ljust(w), path) for (name, path) in li]))
+	print('\n'.join(f'{name.ljust(w)} {path}' for name, path in li))
 
 
 def list_sites():
