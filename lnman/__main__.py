@@ -27,7 +27,8 @@ def main():
 
 	p = sub.add_parser('lsdir')
 	p.add_argument('key')
-	p.set_defaults(handler=lambda args:core.list_directory(args.key))
+	p.add_argument('--as-list', action='store_true')
+	p.set_defaults(handler=lambda args:core.list_directory(args.key, as_list=args.as_list))
 
 
 	p = sub.add_parser('create')

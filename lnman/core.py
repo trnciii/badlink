@@ -56,14 +56,19 @@ def list_contents(site=None, as_list=False):
 		print('\n'.join(f'{name.ljust(w)} {path}' for name, path in li))
 
 
-def list_directory(key):
+def list_directory(key, as_list=True):
 	'''
 	print in cyan if the item is managed
 	'''
 	site = load()['sites'][key]
 	keys = site['packages'].keys()
-	items = [(i, (i in keys)) for i in os.listdir(site['path'])]
-	print('\n'.join([helper.term_color(i, 'cyan') if d else i for i, d in items]))
+	if as_list:
+		print(' '.join(os.listdir(site['path'])))
+	else:
+		print('\n'.join([
+			helper.term_color(i, 'cyan') if i in keys else i
+			for i in os.listdir(site['path'])
+		]))
 
 
 def show(key):
