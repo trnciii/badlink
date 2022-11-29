@@ -16,9 +16,10 @@ def main():
 	p.add_argument('key')
 	p.set_defaults(handler=lambda args:core.deinit(args.key))
 
-	sub.add_parser('list').set_defaults(handler=lambda _:core.list_packages())
-
-	sub.add_parser('sites').set_defaults(handler=lambda _:core.list_sites())
+	p = sub.add_parser('list')
+	p.add_argument('site', nargs='?', type=str, const=None)
+	p.add_argument('--keys', action='store_true')
+	p.set_defaults(handler=lambda args:core.list_contents(site=args.site, as_keys=args.keys))
 
 	p = sub.add_parser('show')
 	p.add_argument('key')

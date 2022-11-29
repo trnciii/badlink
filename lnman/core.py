@@ -33,24 +33,27 @@ def deinit(key):
 	write(config)
 
 
-def list_packages():
-	sites = load()['sites']
+def list_contents(site=None, as_keys=False):
+	tree = load()['sites']
 
-	li = sum((
-		[(f'+ {site}', v['path'])]
-		+ [(f'  - {pk}', path) for pk, path in v['packages'].items()]
-		for site, v in sites.items()
-	), [])
+	if as_keys:
+		if site:
+			print(' '.join(tree[site]['packages']))
+		else:
+			print(' '.join(tree.keys()))
 
-	w = max([len(name) for name, _ in li])
-	print('\n'.join(f'{name.ljust(w)} {path}' for name, path in li))
+	else:
+		if site:
+			tree = {site:tree[site]}
 
+		li = sum((
+			[(f'+ {site}', v['path'])]
+			+ [(f'  - {pk}', path) for pk, path in v['packages'].items()]
+			for site, v in tree.items()
+		), [])
 
-def list_sites():
-	sites = load()['sites']
-	li = [(k, v['path']) for k, v in sites.items()]
-	w = max(len(k) for k, _ in li)
-	print('\n'.join(f'{k.ljust(w)} {v}' for k, v in li))
+		w = max([len(name) for name, _ in li])
+		print('\n'.join(f'{name.ljust(w)} {path}' for name, path in li))
 
 
 def list_directory(key):
