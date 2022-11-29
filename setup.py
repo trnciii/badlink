@@ -7,6 +7,7 @@ setup(
 	url='https://github.com/trnciii/lnman',
 	license='MIT',
 	packages=find_packages(),
+	package_data={'lnman':['data/*']},
 	entry_points={
 		'console_scripts': ['lnman = lnman.__main__:main']
 	}

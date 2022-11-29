@@ -1,6 +1,13 @@
 from . import core
 import argparse
 
+def completion():
+	import os
+	path = os.path.join(os.path.dirname(core.__file__), 'data', 'completion.bash')
+	with open(path) as f:
+		return f.read()
+
+
 def main():
 	parser = argparse.ArgumentParser()
 	sub = parser.add_subparsers()
@@ -53,6 +60,8 @@ def main():
 	p = sub.add_parser('unregister')
 	p.add_argument('key')
 	p.set_defaults(handler=lambda args:core.unregister(args.key))
+
+	sub.add_parser('completion').set_defaults(handler=lambda _:print(completion()))
 
 	sub.add_parser('version').set_defaults(handler=lambda _:print(core.version_string))
 
