@@ -47,8 +47,6 @@ def main():
 
 	sub.add_parser('version').set_defaults(handler=lambda _:print(core.version_string))
 
-	sub.add_parser('url').set_defaults(handler=lambda _:print('https://github.com/trnciii/lnman'))
-
 
 	args = parser.parse_args()
 	if hasattr(args, 'handler'):
