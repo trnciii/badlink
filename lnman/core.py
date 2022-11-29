@@ -33,10 +33,10 @@ def deinit(key):
 	write(config)
 
 
-def list_contents(site=None, as_keys=False):
+def list_contents(site=None, as_list=False):
 	tree = load()['sites']
 
-	if as_keys:
+	if as_list:
 		if site:
 			print(' '.join(tree[site]['packages']))
 		else:
