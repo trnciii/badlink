@@ -80,9 +80,22 @@ def show(key):
 			'packages: [ {} ]'.format(', '.join(packages))
 		]))
 
+def create(dst, src):
+	if not os.path.exists(src):
+		print(src, 'does not exist')
+		return
+
+	if os.path.exists(dst):
+		print(dst, 'already exists')
+		return
+
+	print('src', src)
+	print('dst', dst)
+
+	os.symlink(src, dst)
+
 
 def install(dst, src):
-
 	if '/' in dst:
 		sitename, linkname = dst.split('/')
 	else:
@@ -94,18 +107,7 @@ def install(dst, src):
 	src_full = os.path.abspath(src)
 	dst_full = os.path.abspath(os.path.join(site['path'], linkname))
 
-	if not os.path.exists(src_full):
-		print(src_full, 'does not exist')
-		return
-
-	if os.path.exists(dst_full):
-		print(dst_full, 'already exists')
-		return
-
-	print('src', src_full)
-	print('dst', dst_full)
-
-	os.symlink(src_full, dst_full)
+	create(dst_full, src_full)
 
 	site['packages'][linkname] = src_full
 

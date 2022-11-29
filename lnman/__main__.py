@@ -28,6 +28,13 @@ def main():
 	p.add_argument('key')
 	p.set_defaults(handler=lambda args:core.list_directory(args.key))
 
+
+	p = sub.add_parser('create')
+	p.add_argument('dst')
+	p.add_argument('src')
+	p.set_defaults(handler=lambda args: core.create(args.dst, args.src))
+
+
 	p = sub.add_parser('install')
 	p.add_argument('dst')
 	p.add_argument('src')
