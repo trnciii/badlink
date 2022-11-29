@@ -23,7 +23,7 @@ def main():
 
 	p = sub.add_parser('show')
 	p.add_argument('key')
-	p.set_defaults(handler=lambda args:core.show(args.key))
+	p.set_defaults(handler=lambda args:core.show(args.key.rstrip('/')))
 
 	p = sub.add_parser('lsdir')
 	p.add_argument('key')
@@ -39,7 +39,7 @@ def main():
 	p = sub.add_parser('install')
 	p.add_argument('dst')
 	p.add_argument('src')
-	p.set_defaults(handler=lambda args:core.install(args.dst, args.src))
+	p.set_defaults(handler=lambda args:core.install(args.dst.rstrip('/'), args.src))
 
 	p = sub.add_parser('remove')
 	p.add_argument('key')
