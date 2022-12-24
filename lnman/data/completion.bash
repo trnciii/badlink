@@ -1,8 +1,3 @@
-_lnman_init_completion(){
-  COMPREPLY=()
-  _get_comp_words_by_ref "$@" cur prev words cword
-}
-
 _lnman_complete_sites(){
   COMPREPLY=( $(compgen -W "$(lnman list --as-list)" -- "$cur") )
 }
@@ -28,9 +23,10 @@ _lnman_complete_tree(){
 _lnman(){
   local cur prev words cword split
   if declare -F _init_completion >/dev/null 2>&1; then
-    _init_completion -n :/ || return
+    _init_completion -n / || return
   else
-    _lnman_init_completion -n :/ || return
+    COMPREPLY=()
+    _get_comp_words_by_ref -n / cur prev words cword || return
   fi
 
   case $cword in
